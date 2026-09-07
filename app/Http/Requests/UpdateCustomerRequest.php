@@ -2,10 +2,11 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class CustomerRequest extends FormRequest
+class UpdateCustomerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,23 +24,15 @@ class CustomerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => [
-                'required',
-                Rule::unique('customers', 'name'),
-            ],
-
+            'name' => ['required', Rule::unique('customers', 'name')->ignore($this->route('customer')),],
             'city' => 'required',
             'address' => 'required',
             'country' => 'required',
-
-            'phone' => [
-                'required','numeric',
-                Rule::unique('customers', 'phone'),
-            ],
+            'phone' => ['required', 'numeric', Rule::unique('customers', 'phone')->ignore($this->route('customer')),],
             'email' => [
                 'nullable',
                 'email',
-                Rule::unique('customers', 'email'),
+                Rule::unique('customers', 'email')->ignore($this->route('customer')),
             ],
         ];
     }

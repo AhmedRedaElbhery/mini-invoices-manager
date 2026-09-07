@@ -7,10 +7,10 @@
         </div>
 
         <div class="flex items-center gap-5 mr-5">
-            <Link>Dashboard</Link>
-            <Link>Invoices</Link>
+            <Link href="/dashboard">Dashboard</Link>
+            <Link href="/invoice">Invoices</Link>
             <Link href="/customers" >Customers</Link>
-            <Link>Products</Link>
+            <Link href="/products">Products</Link>
 
             <form @submit.prevent="logout">
                 <button type="submit">Logout</button>

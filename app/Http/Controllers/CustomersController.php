@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CustomerRequest;
+use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -49,7 +50,7 @@ class CustomersController extends Controller
      */
     public function show(string $id)
     {
-        //
+        dd('show');
     }
 
     /**
@@ -57,15 +58,27 @@ class CustomersController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $customer = Customer::find($id);
+        return Inertia::render('customers/edit',compact('customer'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateCustomerRequest $request, string $id)
     {
-        //
+        $data = Customer::find($id);
+        $data->update([
+            'name'=> $request->name,
+            'email'=> $request->email,
+            'phone'=> $request->phone,
+            'city'=> $request->city,
+            'address'=> $request->address,
+            'country'=> $request->country,
+            'user_id'=> auth()->user()->id,
+        ]);
+
+        return redirect()->route('customers.index')->with('success','The Customer Updated Successfully');
     }
 
     /**
@@ -73,6 +86,7 @@ class CustomersController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        //check if this user have invoices return error else delete
+        dd('delete');
     }
 }

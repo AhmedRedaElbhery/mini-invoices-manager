@@ -3,11 +3,11 @@
 
     <div class="w-[75%] container mx-auto justify-items-center">
         <div class="my-5">
-            <h1 class="text-xl font-bold">create New customer</h1>
+            <h1 class="text-xl font-bold">Edit customer</h1>
         </div>
         <form
             class="w-[80%] mx-auto mt-10 p-6 border border-gray-300 rounded-lg"
-            @submit.prevent="create"
+            @submit.prevent="update"
         >
             <div class="grid grid-cols-2 gap-5">
                 <div>
@@ -89,34 +89,38 @@
                 </div>
             </div>
 
-            <div class="flex justify-center">
+            <div class="flex">
+
                 <button
                     type="submit"
-                    class="w-[80%] mt-6 px-5 py-2.5 bg-green-600 text-white rounded"
+                    class="w-[45%] mt-6 px-5 py-2.5 bg-green-600 text-white rounded"
                 >
-                    Create Customer
+                    Update Customer
                 </button>
+                <Link href="/customers/" class="w-[45%] mt-6 px-5 py-2.5 ml-3 bg-gray-600 text-white rounded text-center">Cancel</Link>
             </div>
         </form>
     </div>
 </template>
 
 <script setup>
-import { useForm } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 import NavBar from "../layout/navbar.vue";
+import { Link } from "@inertiajs/vue3";
 
+const page = usePage()
 
 const form = useForm({
-    name: '',
-    email: '',
-    phone: '',
-    city: '',
-    country: '',
-    address: '',
+    name: page.props.customer.name,
+    email: page.props.customer.email,
+    phone: page.props.customer.phone,
+    city: page.props.customer.city,
+    country: page.props.customer.country,
+    address: page.props.customer.address,
 });
 
-function create(){
-    form.post('/customers');
+function update(){
+    form.put(`/customers/${page.props.customer.id}`);
 }
 
 </script>
