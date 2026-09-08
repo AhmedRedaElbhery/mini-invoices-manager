@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Enums\ProductType;
 
 class ProductsController extends Controller
 {
@@ -16,6 +16,15 @@ class ProductsController extends Controller
     public function index()
     {
         $products = Product::paginate(5);
+        foreach($products as $product){
+
+            $product['type_name'] = 'Service';
+
+            if($product->type == ProductType::TypeIsProduct->value)
+            {
+                $product['type_name'] = 'Product';
+            }
+        }
         return Inertia::render('products/index',compact('products'));
     }
 

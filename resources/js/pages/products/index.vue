@@ -35,9 +35,7 @@
                     </td>
 
                     <td class="border p-3">
-                        <span v-if="product.type == 0"> Product </span>
-
-                        <span v-else-if="product.type == 1"> Service </span>
+                        {{ product.type_name }}
                     </td>
 
                     <td class="border p-3">

@@ -5,16 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class Product extends Model implements Auditable
+class InvoiceDetails extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
-    protected $table='products';
+    protected $table = 'invoices_details';
     protected $fillable = [
-        'user_id',
-        'name',
+        'inovice_id',
+        'product_id',
         'description',
-        'type',
+        'quantity',
         'unit_price',
+        'total',
     ];
 }

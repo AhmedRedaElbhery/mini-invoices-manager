@@ -1,6 +1,6 @@
 <template>
     <div
-        class="bg-black text-white border border-gray-300 p-5 flex items-center justify-between"
+        class="bg-black text-white border border-gray-300 p-4 flex items-center justify-between"
     >
         <div>
             <h1 class="font-bold text-lg">Mini Invoice Manager</h1>
