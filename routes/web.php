@@ -17,6 +17,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/invoicedetails/{id}',[InvoicesDetailsController::class , 'addItem']);
     Route::post('/invoicedetails',[InvoicesDetailsController::class , 'storeItem']);
+    Route::delete('/invoiceItem/{id}',[InvoicesController::class , 'destroyItem']);
+    Route::post('/invoiceAddItem/{id}',[InvoicesController::class , 'addItem']);
 
 
 });

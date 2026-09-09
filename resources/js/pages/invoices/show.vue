@@ -55,6 +55,11 @@
                     <th class="border border-gray-300 px-4 py-2 text-left">
                         Item Name
                     </th>
+
+                    <th class="border border-gray-300 px-4 py-2 text-left">
+                        Description
+                    </th>
+
                     <th class="border border-gray-300 px-4 py-2 text-left">
                         Quantity
                     </th>
@@ -71,9 +76,10 @@
             <tbody>
                 <tr v-for="item in invoice_details" :key="item.id">
                     <td class="border border-gray-300 px-4 py-2">{{ item.product_name }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ item.description }}</td>
                     <td class="border border-gray-300 px-4 py-2">{{ item.quantity }}</td>
-                    <td class="border border-gray-300 px-4 py-2">{{ item.unit_price }}</td>
-                    <td class="border border-gray-300 px-4 py-2">{{ item.total }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ item.unit_price /100 }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ item.total /100}}</td>
                 </tr>
             </tbody>
         </table>
@@ -82,21 +88,21 @@
             <div class="border border-gray-300 block">
                 <p class="p-3">
                     <span class="text-lg font-bold mr-2">Sub Total: </span>
-                    {{ invoice.subtotal }}
+                    {{ invoice.subtotal /100 }}
                 </p>
             </div>
 
             <div class="border border-gray-300 block">
                 <p class="p-3">
                     <span class="text-lg font-bold mr-2">discount: </span>
-                    {{ invoice.discount }}
+                    {{ invoice.discount }} %
                 </p>
             </div>
 
             <div class="border border-gray-300 block">
                 <p class="p-3">
                     <span class="text-lg font-bold mr-2">Total: </span>
-                    {{ invoice.total_cost }}
+                    {{ invoice.total_cost /100 }}
                 </p>
             </div>
         </div>

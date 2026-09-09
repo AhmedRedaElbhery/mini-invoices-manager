@@ -36,7 +36,7 @@
                         {{ invoice.customer_name }}
                     </td>
                     <td class="p-3 border border-gray-200">
-                        {{ invoice.total_cost }}
+                        {{ invoice.total_cost / 100 }}
                     </td>
                     <td class="p-3 border border-gray-200">
                         {{ invoice.status_type }}

@@ -11,7 +11,7 @@ class InvoiceDetails extends Model implements Auditable
 
     protected $table = 'invoices_details';
     protected $fillable = [
-        'inovice_id',
+        'invoice_id',
         'product_id',
         'description',
         'quantity',

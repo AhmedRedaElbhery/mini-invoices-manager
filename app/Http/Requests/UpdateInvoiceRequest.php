@@ -4,9 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Override;
 
-class InvoiceRequest extends FormRequest
+class UpdateInvoiceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,15 +26,8 @@ class InvoiceRequest extends FormRequest
             'customer_id'=>'required',
             'invoice_date'=>'required',
             'due_date'=>'required',
-            'items'=>'required',
             'discount'=>'required|between:0,100',
-        ];
-    }
-
-    public function messages()
-    {
-        return[
-            'items.required'=> 'At least should contain 1 item',
+            'status' => 'required|integer|in:0,1',
         ];
     }
 }
