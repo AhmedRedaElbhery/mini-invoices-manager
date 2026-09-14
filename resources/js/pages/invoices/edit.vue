@@ -1,7 +1,14 @@
 <template>
     <NavBar></NavBar>
 
+    <div v-if="$page.props.flash.success" class="w-[80%] mx-auto p-3 mb-3 bg-green-600 text-white">
+            {{ $page.props.flash.success }}
+        </div>
+
     <div class="w-[80%] mx-auto mt-5 p-4 border border-gray-300">
+
+
+
         <div class="flex justify-self-center my-3">
             <h1 class="my-4">
                 <span class="text-xl font-bold mr-2"> Invoice Number: </span>
@@ -50,43 +57,6 @@
             </div>
         </form>
 
-        <!-- <form @submit.prevent="updateitem" v-if="showeditItem" class="w-[100%] flex ml-5">
-            <div class="w-[25%] mr-4">
-                <label class="block font-bold text-lg">Products</label>
-                <select v-model="itemForm.product_id" class="p-2 w-[100%] border border-gray-600">
-                    <option value="">Select Product</option>
-                    <option v-for="product in products" :key="product.id" :value="product.id">
-                        {{ product.name }}
-                    </option>
-                </select>
-                <div class="text-red-600" v-if="$page.props.errors.product_id">
-                    {{ $page.props.errors.product_id }}
-                </div>
-            </div>
-
-            <div class="w-[25%] mx-4">
-                <label class="block font-bold text-lg">Quantity</label>
-                <input v-model="itemForm.quantity" class="p-2 w-[100%] border border-gray-600" />
-                <div class="text-red-600" v-if="$page.props.errors.quantity">
-                    {{ $page.props.errors.quantity }}
-                </div>
-            </div>
-
-            <div class="w-[25%] mx-4">
-                <label class="block font-bold text-lg">Description</label>
-                <input v-model="itemForm.description" class="p-2 w-[100%] border border-gray-600" />
-            </div>
-
-            <div class="w-[20%] mx-4">
-                <button type="submit" class="bg-green-600 px-3 text-white py-1.5 mx-3 my-5">
-                    Update Item
-                </button>
-                <button @click="hideEdit" class="bg-gray-600 px-3 text-white py-1.5 mx-2 my-5">
-                    Cancel
-                </button>
-            </div>
-        </form> -->
-
         <table class="w-[100%] mx-auto my-3 border border-gray-300">
             <thead class="bg-gray-100">
                 <tr>
@@ -119,15 +89,15 @@
                         {{ item.quantity }}
                     </td>
                     <td class="border border-gray-300 px-4 py-2">
-                        {{ item.unit_price / 100 }}
+                        {{ (item.unit_price / 100).toFixed(2) }}
                     </td>
                     <td class="border border-gray-300 px-4 py-2">
-                        {{ item.total / 100 }}
+                        {{ (item.total / 100).toFixed(2) }}
                     </td>
                     <td class="border border-gray-300 px-4 py-2">
-                        <button @click="editItem(item.id)" class="bg-green-600 py-2 px-3 mx-3 text-white">
+                        <Link :href="`/invoiceeditItem/${item.id}`" class="bg-green-600 py-2 px-3 mx-3 text-white">
                             Edit
-                        </button>
+                        </Link>
                         <button @click="deleteitem(item.id)" class="bg-red-600 p-2 text-white">
                             Delete
                         </button>
@@ -190,7 +160,7 @@
                     <div class="w-[25%]">
                         <label class="block mt-4 text-lg font-bold mr-2">Sub Total</label>
                         <input readonly type="number" class="w-[100%] p-2 border border-gray-600 rounded-lg mt-3"
-                            :value="invoice.subtotal / 100" />
+                            :value="(invoice.subtotal / 100).toFixed(2)" />
                             <div v-if="$page.props.errors.subtotal" class="text-red-600">{{ $page.props.errors.subtotal }}</div>
 
                     </div>
@@ -208,6 +178,7 @@
 import NavBar from "../layout/navbar.vue";
 import { router, useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
+import { Link } from "@inertiajs/vue3";
 
 const { invoice, customers, invoice_details } = defineProps({
     invoice: Object,
@@ -237,7 +208,6 @@ function deleteitem(id) {
 }
 
 const showItem = ref(false);
-// const showeditItem = ref(false);
 
 function additem() {
     showItem.value = true;
@@ -246,10 +216,6 @@ function additem() {
 function hide() {
     showItem.value = false;
 }
-
-// function hideEdit() {
-//     showeditItem.value = false;
-// }
 
 function storeitem() {
     itemForm.post(`/invoiceAddItem/${invoice.id}`, {
@@ -261,15 +227,9 @@ function storeitem() {
     });
 }
 
-// function editItem(id) {
-//     showeditItem.value = true;
-// }
-
-
 function update(id)
 {
     form.put(`/invoice/${id}`);
 }
-
 
 </script>

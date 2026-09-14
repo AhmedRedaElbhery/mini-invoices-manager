@@ -1,8 +1,12 @@
 <template>
     <NavBar></NavBar>
+
     <div class="w-[75%] container mx-auto">
         <div v-if="$page.props.flash.success" class="bg-green-600 text-white font-bold p-3">
             {{ $page.props.flash.success }}
+        </div>
+        <div v-if="$page.props.flash.error" class="bg-red-600 text-white font-bold p-3">
+            {{ $page.props.flash.error }}
         </div>
 
         <div class="my-5">

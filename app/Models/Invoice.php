@@ -21,6 +21,7 @@ class Invoice extends Model implements Auditable
         'discount',
         'total_cost',
         'paid_at',
+        'money_status',
     ];
 
 }

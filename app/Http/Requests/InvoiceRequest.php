@@ -24,18 +24,23 @@ class InvoiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer_id'=>'required',
-            'invoice_date'=>'required',
-            'due_date'=>'required',
-            'items'=>'required',
-            'discount'=>'required|between:0,100',
+            'customer_id' => 'required',
+            'invoice_date' => 'required|date',
+            'due_date' => [
+                'required',
+                'date',
+                'after:' . now()->addDay(),
+            ],
+            'items' => 'required',
+            'discount' => 'required|between:0,100',
         ];
     }
 
     public function messages()
     {
-        return[
-            'items.required'=> 'At least should contain 1 item',
+        return [
+            'items.required' => 'At least should contain 1 item',
+            'due_date.after' => "the date should be start from tomorrow",
         ];
     }
 }

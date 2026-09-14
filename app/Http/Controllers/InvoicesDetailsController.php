@@ -11,16 +11,5 @@ use Inertia\Inertia;
 
 class InvoicesDetailsController extends Controller
 {
-    public function addItem($id)
-    {
-        $invoice_number = Invoice::where(['id'=>$id])->value('invoice_code');
-        $products = Product::get();
-        return Inertia::render('invoices_details/create',compact('invoice_number','id','products'));
-    }
-
-    public function storeItem($id)
-    {
-    }
-
 
 }

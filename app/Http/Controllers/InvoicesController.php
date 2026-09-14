@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\MoneyStatus;
 use App\Enums\StatusType;
 use App\Http\Requests\AddItemRequest;
 use App\Http\Requests\InvoiceRequest;
@@ -9,6 +10,7 @@ use App\Http\Requests\UpdateInvoiceRequest;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\InvoiceDetails;
+use App\Models\Payment;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -42,6 +44,18 @@ class InvoicesController extends Controller
 
             if ($invoice->status == StatusType::Cancelled->value) {
                 $invoice['status_type'] = 'Cancelled';
+            }
+
+            if ($invoice->money_status == MoneyStatus::Paid->value) {
+                $invoice['money_status_type'] = 'Paid';
+            }
+
+            if ($invoice->money_status == MoneyStatus::partial_paid->value) {
+                $invoice['money_status_type'] = 'partial paid';
+            }
+
+            if ($invoice->money_status == MoneyStatus::not_paid->value) {
+                $invoice['money_status_type'] = 'not paid';
             }
         }
         return Inertia::render('invoices/index', compact('invoices'));
@@ -112,7 +126,10 @@ class InvoicesController extends Controller
         foreach ($invoice_details as $item) {
             $item['product_name'] = Product::where(['id' => $item->product_id])->value('name');
         }
-        return Inertia::render('invoices/show', compact('invoice', 'customer', 'invoice_details'));
+
+        $payments = Payment::where(['invoice_id' => $id])->get();
+        $total_paid = Payment::where(['invoice_id' => $id])->sum('total');
+        return Inertia::render('invoices/show', compact('invoice', 'customer', 'invoice_details','payments','total_paid'));
     }
 
     /**
@@ -121,6 +138,19 @@ class InvoicesController extends Controller
     public function edit(string $id)
     {
         $invoice = Invoice::find($id);
+
+        if($invoice->status == StatusType::Paid->value || $invoice->status == StatusType::Cancelled->value)
+        {
+            return redirect()->back()->with('error','invoice number '.$invoice->invoice_code . ' Already Paid and Cant Edit it');
+        }
+
+        $exists = Payment::where(['invoice_id'=>$id])->exists();
+
+        if($exists)
+        {
+            return redirect()->back()->with('error','invoice number '.$invoice->invoice_code . ' Already Paid');
+        }
+
         $invoice_details = InvoiceDetails::where(['invoice_id' => $id])->get();
         foreach ($invoice_details as $item) {
             $item['item_name'] = Product::where(['id' => $item->product_id])->value('name');
@@ -162,7 +192,6 @@ class InvoicesController extends Controller
      */
     public function destroy(string $id)
     {
-
         InvoiceDetails::where(['invoice_id' => $id])->delete();
         Invoice::destroy($id);
 
@@ -212,5 +241,65 @@ class InvoicesController extends Controller
         ]);
 
         return redirect()->route('invoice.edit', $id)->with('success', 'Added Item Successfully');
+    }
+
+    public function makePaid($id)
+    {
+       $invoice = Invoice::find($id);
+
+       $paid = Payment::where(['invoice_id'=>$id])->sum('total');
+
+       $should_be_paid = $invoice->total_cost - $paid;
+
+       Payment::create([
+        'invoice_id'=> $id,
+        'total'=> $should_be_paid,
+        'date'=> now(),
+        'user_id'=>auth()->user()->id,
+       ]);
+
+       $invoice->update([
+        'paid_at' => now(),
+        'status' => StatusType::Paid->value,
+        'user_id' => auth()->user()->id,
+        'money_status' =>MoneyStatus::Paid->value,
+       ]);
+
+       return redirect()->route('invoice.show',$id)->with('success','The Invoice Marked As Paid');
+    }
+
+    public function editItem($id)
+    {
+        $item = InvoiceDetails::find($id);
+        $products = Product::get();
+
+        return Inertia::render('invoices/editItem',compact('item','products'));
+    }
+
+    public function updateItem(Request $request , $id)
+    {
+        $item = InvoiceDetails::find($id);
+
+        $item->update([
+            'product_id'=> $request->product_id ,
+            'quantity'=> $request->quantity ,
+            'description'=> $request->description ,
+            'total'=> $item->unit_price * $request->quantity ,
+        ]);
+
+        $invoice = Invoice::find($item->invoice_id);
+
+        $subtotal = InvoiceDetails::where(['invoice_id'=>$item->invoice_id])->sum('total');
+
+        $total = $subtotal - (($subtotal * $invoice->discount) / 100 );
+
+        $invoice->update([
+            'subtotal' => $subtotal,
+            'total_cost' => $total,
+            'user_id' => auth()->user()->id,
+        ]);
+
+        return redirect()->route('invoice.edit',$item->invoice_id)->with('success','the item updated successfully');
+
     }
 }

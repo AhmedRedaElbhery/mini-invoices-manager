@@ -103,7 +103,7 @@ const page = usePage()
 const form = useForm({
     name: page.props.product.name,
     type: page.props.product.type,
-    price: page.props.product.unit_price / 100,
+    price: (page.props.product.unit_price / 100).toFixed(2),
     description: page.props.product.description,
 });
 

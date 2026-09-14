@@ -39,7 +39,7 @@
                     </td>
 
                     <td class="border p-3">
-                        {{ product.unit_price / 100 }}
+                        {{ (product.unit_price / 100).toFixed(2) }}
                     </td>
 
                     <td>

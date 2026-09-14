@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('invoice_code');
             $table->integer('customer_id');
             $table->integer('status');
+            $table->integer('money_status')->default(0);
             $table->date('invoice_date');
             $table->date('due_date');
             $table->integer('subtotal')->default(0);

@@ -157,11 +157,11 @@
                                     </td>
 
                                     <td class="border border-gray-300 p-3">
-                                        {{ item.unit_price }}
+                                        {{ (item.unit_price).toFixed(2) }}
                                     </td>
 
                                     <td class="border border-gray-300 p-3 font-bold">
-                                        {{ item.total }}
+                                        {{ (item.total).toFixed(2) }}
                                     </td>
 
                                     <td class="border border-gray-300 p-3">
@@ -180,7 +180,7 @@
                                     <span class="font-bold text-lg mr-4"> Subtotal: </span>
 
                                     <span class="font-bold text-lg">
-                                        {{ subtotal }}
+                                        {{ (subtotal).toFixed(2) }}
                                     </span>
                                 </div>
                             </div>
@@ -310,7 +310,7 @@ function calculateDiscount(event) {
         return;
     }
     form.discount = discountPercent;
-    form.total = subtotal.value - ((subtotal.value * discountPercent) / 100);
+    form.total = (subtotal.value - ((subtotal.value * discountPercent) / 100)).toFixed(2);
 }
 
 function create() {
